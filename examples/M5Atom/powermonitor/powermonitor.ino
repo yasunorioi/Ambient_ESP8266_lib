@@ -3,7 +3,7 @@
 #include <Ticker.h>
 #include <SPI.h>
 #include "MCP3002.h"
- //#include "Ambient.h"
+#include "Ambient.h"
 
 
 extern double squareRoot(double);
@@ -11,16 +11,14 @@ extern double squareRoot(double);
 const char* ssid = "yourSSID";
 const char* password = "yourPassword";
 
-//WiFiClient client;
+WiFiClient client;
 
 unsigned int channelId = 100;
 const char* writeKey = "writeKey";
-//Ambient ambient;
+Ambient ambient;
 
 Ticker t1, t2;
 volatile int t1flag, t2flag;
-
-#define LED 4
 
 #define PERIOD 30            // 送信間隔(秒)
 #define SAMPLE_PERIOD 1     // サンプリング間隔(ミリ秒)
@@ -66,19 +64,12 @@ void setup() {
   Serial.begin(115200);
   delay(80);
   Serial.print("Sensor1,Sensor2");
-/*  pinMode(LED, OUTPUT);
 
   while (WiFi.status() != WL_CONNECTED) {  //  Wi-Fi AP接続待ち
     delay(0);
   }
-
-  DBG("WiFi connected\r\nIP address: ");
-  DBG(WiFi.localIP());
-  DBG("\r\n");
     
   ambient.begin(channelId, writeKey, &client);
-
-*/
   mcp3002.begin();
 
   t1flag = 0;
@@ -98,22 +89,16 @@ void loop() {
   amp1 = ampRead(1);
 
   dtostrf(amp0, 3, 1, buf0);
-//  ambient.set(1, buf0);
-  //DBG("amp0: ");  DBG(buf0);
+  ambient.set(1, buf0);
 
   dtostrf(amp1, 3, 1, buf1);
-//  ambient.set(2, buf1);
-  //DBG(", amp1: ");  DBG(buf1);  DBG("\r\n");
+  ambient.set(2, buf1);
+
   Serial.print("a:");
   Serial.print(buf0);
   Serial.print(",b:");
   Serial.println(buf1);
-/*
-
-  digitalWrite(LED, HIGH);
 
   ambient.send();
 
-  digitalWrite(LED, LOW);
-*/
 }
